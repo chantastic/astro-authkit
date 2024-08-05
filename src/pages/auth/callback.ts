@@ -1,7 +1,11 @@
 import type {APIRoute} from 'astro';
 import {WorkOS} from '@workos-inc/node';
 
-export const GET: APIRoute = async ({redirect, request}) => {
+export const GET: APIRoute = async ({
+	redirect,
+	request,
+	cookies,
+}) => {
 	const code = new URL(request.url).searchParams.get('code');
 
 	if (!code) {
@@ -23,6 +27,13 @@ export const GET: APIRoute = async ({redirect, request}) => {
 						.WORKOS_COOKIE_PASSWORD,
 				},
 			});
+
+		cookies.set('wos-session', String(session.sealedSession), {
+			path: '/',
+			httpOnly: true,
+			sameSite: 'lax',
+			secure: true,
+		});
 
 		return new Response(String(session.sealedSession));
 	} catch (error) {
