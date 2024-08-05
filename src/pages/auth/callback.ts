@@ -16,9 +16,13 @@ export const GET: APIRoute = async ({request}) => {
 		await workos.userManagement.authenticateWithCode({
 			code,
 			clientId: import.meta.env.WORKOS_CLIENT_ID,
+			session: {
+				sealSession: true,
+				cookiePassword: import.meta.env.WORKOS_COOKIE_PASSWORD,
+			},
 		});
 
-	return new Response(JSON.stringify(session, null, `\t`));
+	return new Response(String(session.sealedSession));
 };
 
 export const prerender = false;
