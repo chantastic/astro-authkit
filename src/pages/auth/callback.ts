@@ -1,4 +1,5 @@
 import type {APIRoute} from 'astro';
+import {WorkOS} from '@workos-inc/node';
 
 export const GET: APIRoute = async ({request}) => {
 	const code = new URL(request.url).searchParams.get('code');
@@ -9,9 +10,15 @@ export const GET: APIRoute = async ({request}) => {
 		});
 	}
 
-	return new Response(
-		`Auth callback reached with code: ${code}`
-	);
+	const workos = new WorkOS(import.meta.env.WORKOS_API_KEY);
+
+	const session =
+		await workos.userManagement.authenticateWithCode({
+			code,
+			clientId: import.meta.env.WORKOS_CLIENT_ID,
+		});
+
+	return new Response(JSON.stringify(session, null, `\t`));
 };
 
 export const prerender = false;
