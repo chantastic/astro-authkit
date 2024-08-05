@@ -35,7 +35,7 @@ export const GET: APIRoute = async ({
 			secure: true,
 		});
 
-		return new Response(String(session.sealedSession));
+		return redirect('/dashboard');
 	} catch (error) {
 		return redirect('/sign-in');
 	}
