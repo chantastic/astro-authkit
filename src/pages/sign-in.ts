@@ -1,7 +1,7 @@
 import type {APIRoute} from 'astro';
 import {WorkOS} from '@workos-inc/node';
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({redirect}) => {
 	const workos = new WorkOS(import.meta.env.WORKOS_API_KEY);
 
 	const authorizationURL =
@@ -11,7 +11,7 @@ export const GET: APIRoute = async () => {
 			clientId: import.meta.env.WORKOS_CLIENT_ID,
 		});
 
-	return new Response(authorizationURL);
+	return redirect(authorizationURL);
 };
 
 export const prerender = false;
