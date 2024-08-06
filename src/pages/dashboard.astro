@@ -53,13 +53,19 @@ Astro.cookies.set(
 		secure: true,
 	}
 );
+
+const session =
+	await workos.userManagement.getSessionFromCookie({
+		sessionData: cookie.value,
+		cookiePassword: import.meta.env.WORKOS_COOKIE_PASSWORD,
+	});
 ---
 
 <Layout title="Dashboard">
 	<main>
 		<h1>Dashboard</h1>
 		<p>
-			Welcome {'Guest'}!
+			Welcome {session?.user.firstName ?? 'Guest'}!
 		</p>
 	</main>
 </Layout>
