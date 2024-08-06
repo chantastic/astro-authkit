@@ -34,7 +34,13 @@ const refreshResponse =
 	});
 
 if (!refreshResponse.authenticated) {
-	return new Response('Refresh failed', {status: 401});
+	Astro.cookies.delete('wos-session', {
+		path: '/',
+		httpOnly: true,
+		sameSite: 'lax',
+		secure: true,
+	});
+	return Astro.redirect('/sign-in');
 }
 ---
 
