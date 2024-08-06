@@ -42,6 +42,17 @@ if (!refreshResponse.authenticated) {
 	});
 	return Astro.redirect('/sign-in');
 }
+
+Astro.cookies.set(
+	'wos-session',
+	String(refreshResponse.sealedSession),
+	{
+		path: '/',
+		httpOnly: true,
+		sameSite: 'lax',
+		secure: true,
+	}
+);
 ---
 
 <Layout title="Dashboard">
