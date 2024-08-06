@@ -26,6 +26,16 @@ if (
 ) {
 	return Astro.redirect('/sign-in');
 }
+
+const refreshResponse =
+	await workos.userManagement.refreshAndSealSessionData({
+		sessionData: cookie.value,
+		cookiePassword: import.meta.env.WORKOS_COOKIE_PASSWORD,
+	});
+
+if (!refreshResponse.authenticated) {
+	return new Response('Refresh failed', {status: 401});
+}
 ---
 
 <Layout title="Dashboard">
