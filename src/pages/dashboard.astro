@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import {WorkOS} from '@workos-inc/node';
+import {WorkOS, type SessionCookieData} from '@workos-inc/node';
 
 export const prerender = false;
 
@@ -54,18 +54,18 @@ Astro.cookies.set(
 	}
 );
 
-const session =
-	await workos.userManagement.getSessionFromCookie({
+const {user} =
+	((await workos.userManagement.getSessionFromCookie({
 		sessionData: cookie.value,
 		cookiePassword: import.meta.env.WORKOS_COOKIE_PASSWORD,
-	});
+	})) ?? {firstName: 'Guest'}) as SessionCookieData;
 ---
 
 <Layout title="Dashboard">
 	<main>
 		<h1>Dashboard</h1>
 		<p>
-			Welcome {session?.user.firstName ?? 'Guest'}!
+			Welcome {user.firstName}!
 		</p>
 	</main>
 </Layout>
