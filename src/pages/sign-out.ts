@@ -1,4 +1,5 @@
 import type {APIRoute} from 'astro';
+import {WorkOS} from '@workos-inc/node';
 
 export const GET: APIRoute = async ({cookies, redirect}) => {
 	const cookie = cookies.get('wos-session');
@@ -7,7 +8,17 @@ export const GET: APIRoute = async ({cookies, redirect}) => {
 		return redirect('/sign-in');
 	}
 
-	return new Response(`Signing out…`);
+	const workos = new WorkOS(import.meta.env.WORKOS_API_KEY, {
+		clientId: import.meta.env.WORKOS_CLIENT_ID,
+	});
+
+	const logoutUrl =
+		await workos.userManagement.getLogoutUrlFromSessionCookie({
+			sessionData: cookie.value,
+			cookiePassword: import.meta.env.WORKOS_COOKIE_PASSWORD,
+		});
+
+	return new Response(String(logoutUrl));
 };
 
 export const prerender = false;
