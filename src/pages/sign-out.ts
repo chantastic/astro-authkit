@@ -18,6 +18,13 @@ export const GET: APIRoute = async ({cookies, redirect}) => {
 			cookiePassword: import.meta.env.WORKOS_COOKIE_PASSWORD,
 		});
 
+	cookies.delete('wos-session', {
+		path: '/',
+		httpOnly: true,
+		sameSite: 'lax',
+		secure: true,
+	});
+
 	return new Response(String(logoutUrl));
 };
 
