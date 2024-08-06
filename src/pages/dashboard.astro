@@ -2,6 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 
 export const prerender = false;
+
+const cookie = Astro.cookies.get('wos-session');
+
+if (!cookie?.value) {
+	return Astro.redirect('/sign-in');
+}
 ---
 
 <Layout title="Dashboard">
