@@ -20,13 +20,11 @@ const autenticationResponse =
 		cookiePassword: import.meta.env.WORKOS_COOKIE_PASSWORD,
 	});
 
-if (!autenticationResponse.authenticated) {
-	return new Response(
-		`Authentication failed: ${autenticationResponse.reason}`,
-		{
-			status: 401,
-		}
-	);
+if (
+	!autenticationResponse.authenticated &&
+	autenticationResponse.reason !== 'invalid_jwt'
+) {
+	return Astro.redirect('/sign-in');
 }
 ---
 
