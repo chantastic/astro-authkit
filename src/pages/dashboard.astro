@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import {WorkOS} from '@workos-inc/node';
 
 export const prerender = false;
 
@@ -7,6 +8,25 @@ const cookie = Astro.cookies.get('wos-session');
 
 if (!cookie?.value) {
 	return Astro.redirect('/sign-in');
+}
+
+const workos = new WorkOS(import.meta.env.WORKOS_API_KEY, {
+	clientId: import.meta.env.WORKOS_CLIENT_ID,
+});
+
+const autenticationResponse =
+	await workos.userManagement.authenticateWithSessionCookie({
+		sessionData: cookie.value,
+		cookiePassword: import.meta.env.WORKOS_COOKIE_PASSWORD,
+	});
+
+if (!autenticationResponse.authenticated) {
+	return new Response(
+		`Authentication failed: ${autenticationResponse.reason}`,
+		{
+			status: 401,
+		}
+	);
 }
 ---
 
