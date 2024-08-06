@@ -25,7 +25,7 @@ export const GET: APIRoute = async ({cookies, redirect}) => {
 		secure: true,
 	});
 
-	return new Response(String(logoutUrl));
+	return redirect(logoutUrl);
 };
 
 export const prerender = false;
